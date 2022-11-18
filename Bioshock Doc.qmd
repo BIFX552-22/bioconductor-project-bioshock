@@ -13,7 +13,7 @@ We're a little bit uncertain about our workflow. It's terrifyingly long and we a
 
 ## Loading the Package
 
-The is the initial step we do to get the methlation array package installed.
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
 
 ```{r}
 #| eval: false
@@ -29,11 +29,8 @@ BiocManager::install("methylationArrayAnalysis")
 This is how we loaded the example data. It is part of the package so you do not need to install anything extra. 
 
 ```{r}
-# Set up a path to the data directory
-dataDirectory <- system.file("extdata", package = "methylationArrayAnalysis")
-
-# List the files
-list.files(dataDirectory, recursive = TRUE)
+#| echo: false
+2 * 2
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).
