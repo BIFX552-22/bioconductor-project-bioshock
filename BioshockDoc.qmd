@@ -7,13 +7,31 @@ authors:
 - Ian Lacy
 ---
 
-## 1.1 Workflow
+## 1.1 Introduction
 
-We're a little bit uncertain about our workflow. It's terrifyingly long and we aren't quite sure where to start, but here is the link so we don't forget: <https://bioconductor.org/packages/release/workflows/html/methylationArrayAnalysis.html>. We should include some information about the context of this package, such as the types of research it could assist and how it would be used. Some background information on what type of data to feed into the workflow and how it is structured would also be handy.
+**Epigenetics and Methylation**
+
+-   Epigenetics: The study of how your behaviors and environment can cause changes that affect the way your genes work.
+
+-   Methylation: Methyl group gets added to DNA, at Cytosine/Guanine bases. Associated with development and disease.
+
+**Common Methylation Research**
+
+-   Dr. Phillip Jurmeister: Machine learning algorithm to classify sinonasal tumors
+
+-   Dr. Glen E Duncan: Physical activity and epigenetic markers
+
+**Methylation Level Measurements**
+
+-   Two measurements for each CpG: methylated intensity(M) and unmethylated intensity(U) for determining methylation proportions 
+
+-   `GetBeta` function in `minfi` to get these values 
 
 ## 1.2 Loading the Workflow Package
 
-The is the initial step we do to get the methlation array package installed.
+The is the initial step we do to get the methlation array package installed. You can read more about this workflow on the bioconductor website.
+
+-   <https://bioconductor.org/packages/release/workflows/html/methylationArrayAnalysis.html>
 
 ```{r}
 #| eval: false
@@ -41,6 +59,10 @@ list.files(dataDirectory, recursive = TRUE)
 ## 2.2 Load the Data
 
 This is where we load the example data and prepare it for our analysis.
+
+-   Many methylation specific packages  
+
+-   `Minfi` and `read.metharray.sheet`
 
 ```{r}
 #| echo: false
@@ -88,6 +110,12 @@ rgSet
 ## 2.3 Quality Control
 
 This is where we gauge the quality of our data and remove parts that aren't good enough to use.
+
+-   P-value detection through `detP` function. 
+
+-   Plot the mean
+
+-   QcReport function in `minfi`
 
 ```{r}
 # Calculate the detection p-values
@@ -144,6 +172,14 @@ dim(detP)
 
 Another process of data treatment to help eliminate unwanted variability between samples.
 
+-   Dealing with variation within data
+
+-   Many different methods even within just `minfi`
+
+-   `preprocessFunnorm` for global methylation differences
+
+-   Quantile is more suited samples with no global differences
+
 ```{r}
 # Normalize the data; this results in a GenomicRatioSet object
 mSetSq <- preprocessQuantile(rgSet) 
@@ -168,7 +204,11 @@ legend("top", legend = levels(factor(targets$Sample_Group)),
 
 ## 2.5 Data Exploration
 
-Now we make MDS plots to help visualize our data and understand its distribution better.
+Visualizing data is a key component of data exploration and can make it easier to understand results. In this workflow, we used multi-dimensional scaling plots (MDS). MDS plots are based on principal components analysis (PCA) and look at the similarities and differences between the various samples. Samples that are more like each other should cluster together, and samples that are different should be further apart on the plot.
+
+Note: PCA is a data reduction method that reduces the number of variables that account for the variance in the data and makes it easier to interpret large datasets.
+
+To plot this we used the `plotMDS` function, a built-in function in R to handle this kind of data. It appears like ggplot2 with the ability to alter specific aspects of the plot.
 
 ```{r}
 # MDS plots to look at largest sources of variation
@@ -205,7 +245,17 @@ legend("topright", legend=levels(factor(targets$Sample_Group)), text.col=pal,
 
 ## 2.6 Filtering
 
-It is typical to remove poor quality probes prior to analysis.
+Like what we did with Trimmomatic when working with databases, this step requires that we filter out DNA probes that interfere with our analysis. This is because the signal from these probes is unreliable and removing allows us to perform fewer statistical tests.
+
+In this step, we begin by ordering the probes, then removing any probes that have failed in one or more samples.
+
+While this dataset is entirely composed of male donors, filtering probes from both X and Y chromosomes can be done.
+
+Similarly, single nucleotide polymorphisms (SNPs) - the most common type of genetic variation among people -- can also be filtered out of probes using the function `minifi`.
+
+After filtering we can re-examined the data using MDS plots to see if the relationship between samples changed. In this workflow, you can see that removing the SNP-affected CpGs probes from the data changes the sample clustering in the MDS plots.
+
+We then calculated the M-values, a measure of the number of molecules that are methylated or unmethylated and the beta value which roughly represents the percentage of a site that is methylated (Du et al, 2010).
 
 ```{r}
 # Ensure probes are in the same order in the mSetSq and detP objects
@@ -300,7 +350,11 @@ legend("topleft", legend = levels(factor(targets$Sample_Group)),
 
 ## 2.7 Probe-Wise Differential Methylation Analysis
 
-This helps us do a pair-wise comparison of methylation probes in different cell types. I think.
+The focus of this dataset is discovering differentially methylated probes between different cell types. This style of analysis is called a paired analysis; differences between cell types are calculated within each individual, and then these differences are averaged across individuals to determine whether there is an overall significant difference in the mean methylation level for each CpG site.
+
+We were interested in pairwise comparisons between the four cell types. In this workflow, we analyzed the M-values in limma. This allowed us to obtain moderated t-statistics and associated p-values for each CpG site, sites where a cytosine is followed by guanine.
+
+Based on a false discovery rate of 5%, we found 3021 significantly differentially methylated CpGs in the naïve vs rTreg comparison. The rTreg/ act_rTreg did not show any significant differential methylation.
 
 ```{r}
 # This is the factor of interest
@@ -352,7 +406,7 @@ sapply(rownames(DMPs)[1:4], function(cpg){
 
 ## 2.8 Differential Methylation Analysis of Regions
 
-To learn more about other nearby regions, we need to take a more broad view of the data. Or something.
+Our probe-wise differential methylation analysis can be valuable, but it is not alone sufficient if we want to look at entire regions. Several Bioconductor packages exist that can help obtain a broader overview of differential methylated regions (DMRs). This workflow utilizes the `dmrcate` Bioconductor package. The final figure maps the methylated regions against chromosome length and the known genes.
 
 ```{r}
 myAnnotation <- cpg.annotate(object = mVals, datatype = "array", what = "M", 
@@ -386,7 +440,7 @@ DMR.plot(ranges = results.ranges, dmr = 2, CpGs = bVals, phen.col = cols,
 
 ## 2.9 Customising Visualisations of Methylation Data
 
-There are some extra packages that help us focus in on our region of interest. I hope.
+The `Gviz` package utilized by this workflow allows the customization of data visualization plots with a variety of different functions. Here we focus on the DMR identified in our previous graph, while also more clearly presenting the methylation data. There are other types of analysis that could be done with this workflow, but this covers the main functions.
 
 ```{r}
 # indicate which genome is being used
@@ -488,3 +542,25 @@ sizes <- c(2,2,5,2,2,2,3) # set up the relative sizes of the tracks
 plotTracks(tracks, from=minbase, to=maxbase, showTitle=TRUE, add53=TRUE, 
            add35=TRUE, grid=TRUE, lty.grid=3, sizes = sizes, length(tracks))
 ```
+
+## 3.1 Conclusions
+
+**Things Learned**
+
+-   How to navigate the Bioconductor website
+
+-   Using Bioconductor for supplemental research
+
+-   R has many packages to handle a wide variety of biological data
+
+-   How to use Bioconductor to learn how to approach different data problems
+
+-   Methylation is complicated
+
+**Challenges**
+
+-   Undoing commits with GitKraken
+
+-   Updating R and not just RStudio
+
+-   Getting the document to render
