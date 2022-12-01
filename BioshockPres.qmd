@@ -8,7 +8,7 @@ format: revealjs
 editor: visual
 ---
 
-## Introduction
+## 1.1 Background
 
 -   Epigenetics: The study of how your behaviors and environment can change the way your genes work.
 
@@ -16,9 +16,11 @@ editor: visual
 
 -   Common Methylation Research
 
-    -  Machine learning algorithm to classify tumors.
+    -   Machine learning algorithm to classify tumors.
 
-    -  Physical activity and epigenetic markers.
+    -   Physical activity and epigenetic markers.
+
+## 1.2 Introduction
 
 -   Methylation Level Measurements
 
@@ -33,10 +35,41 @@ When you click the **Render** button a document will be generated that includes:
 -   Content authored with markdown
 -   Output from executable code
 
-## Code
+## 2.8 DMR Analysis
 
-When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
+-   Probe-wise differential methylation analysis is useful but does not look at entire regions.
+-   The `dmrcate` package helps us identify and explore differential methylated regions (DMRs).
+    -   Other functions like `dmrFind` and `bumphunter` are similar but use statistical methods and run slower.
+-   Generated figure maps methlated regions against the chromosome length and known genes.
+    -   Need annotated chromosome data.
 
-```{r}
-1 + 1
-```
+## 2.8 DMR Analysis Figure
+
+![Figure made with the `dmrcate` package.](./BioshockDoc_files/figure-html/unnamed-chunk-34-1.png)
+
+## 2.9 Customizing Visualizations
+
+-   The `Gviz` package allows for more precise customization of data visualization plots.
+    -   Its package vignette is very extensive with a with a variety of different functions.
+-   An important feature utilized by this workflow is to zoom in on an identified DMR.
+    -   Need genomic coordinates from `dmrcate`.
+    -   Need annotated chromosome data.
+-   Allows for clearer presentation of results.
+
+## 2.9 Customized DMR Figure
+
+![Figure made with the `Gviz` package.](./BioshockDoc_files/figure-html/unnamed-chunk-44-1.png)
+
+## 3.1 Conclusions
+
+**Things Learned**
+
+-   Methylation is complicated
+-   Bioconductor has a vast number of packages and workflows
+-   There are many tools available to visualize data
+
+**Challenges**
+
+-   Undoing commits with GitKraken
+-   Updating R and RStudio
+-   Getting the document to render

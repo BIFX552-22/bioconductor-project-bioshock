@@ -332,8 +332,8 @@
   <p class="author">Ian Lacy</p>
 </section>
 
-<section id="introduction" class="slide level2">
-<h2>Introduction</h2>
+<section id="background" class="slide level2">
+<h2>1.1 Background</h2>
 <ul>
 <li><p>Epigenetics: The study of how your behaviors and environment can change the way your genes work.</p></li>
 <li><p>Methylation: Methyl group gets added to DNA, at C/G bases. Associated with development and disease.</p></li>
@@ -342,6 +342,11 @@
 <li><p>Machine learning algorithm to classify tumors.</p></li>
 <li><p>Physical activity and epigenetic markers.</p></li>
 </ul></li>
+</ul>
+</section>
+<section id="introduction" class="slide level2">
+<h2>1.2 Introduction</h2>
+<ul>
 <li><p>Methylation Level Measurements</p>
 <ul>
 <li><p>Two measurements for each CpG: methylated intensity(M) and unmethylated intensity(U) for determining methylation proportions&nbsp;</p></li>
@@ -357,14 +362,57 @@
 <li>Output from executable code</li>
 </ul>
 </section>
-<section id="code" class="slide level2">
-<h2>Code</h2>
-<p>When you click the <strong>Render</strong> button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
-</div>
+<section id="dmr-analysis" class="slide level2">
+<h2>2.8 DMR Analysis</h2>
+<ul>
+<li>Probe-wise differential methylation analysis is useful but does not look at entire regions.</li>
+<li>The <code>dmrcate</code> package helps us identify and explore differential methylated regions (DMRs).
+<ul>
+<li>Other functions like <code>dmrFind</code> and <code>bumphunter</code> are similar but use statistical methods and run slower.</li>
+</ul></li>
+<li>Generated figure maps methlated regions against the chromosome length and known genes.
+<ul>
+<li>Need annotated chromosome data.</li>
+</ul></li>
+</ul>
+</section>
+<section id="dmr-analysis-figure" class="slide level2">
+<h2>2.8 DMR Analysis Figure</h2>
+
+<img data-src="./BioshockDoc_files/figure-html/unnamed-chunk-34-1.png" class="r-stretch quarto-figure-center"><p class="caption">Figure made with the <code>dmrcate</code> package.</p></section>
+<section id="customizing-visualizations" class="slide level2">
+<h2>2.9 Customizing Visualizations</h2>
+<ul>
+<li>The <code>Gviz</code> package allows for more precise customization of data visualization plots.
+<ul>
+<li>Its package vignette is very extensive with a with a variety of different functions.</li>
+</ul></li>
+<li>An important feature utilized by this workflow is to zoom in on an identified DMR.
+<ul>
+<li>Need genomic coordinates from <code>dmrcate</code>.</li>
+<li>Need annotated chromosome data.</li>
+</ul></li>
+<li>Allows for clearer presentation of results.</li>
+</ul>
+</section>
+<section id="customized-dmr-figure" class="slide level2">
+<h2>2.9 Customized DMR Figure</h2>
+
+<img data-src="./BioshockDoc_files/figure-html/unnamed-chunk-44-1.png" class="r-stretch quarto-figure-center"><p class="caption">Figure made with the <code>Gviz</code> package.</p></section>
+<section id="conclusions" class="slide level2">
+<h2>3.1 Conclusions</h2>
+<p><strong>Things Learned</strong></p>
+<ul>
+<li>Methylation is complicated</li>
+<li>Bioconductor has a vast number of packages and workflows</li>
+<li>There are many tools available to visualize data</li>
+</ul>
+<p><strong>Challenges</strong></p>
+<ul>
+<li>Undoing commits with GitKraken</li>
+<li>Updating R and RStudio</li>
+<li>Getting the document to render</li>
+</ul>
 <div class="footer footer-default">
 
 </div>
@@ -580,48 +628,6 @@
         ]
       });
     </script>
-    
-    <script>
-      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-      // slide changes (different for each slide format).
-      (function () {
-        function fireSlideChanged(previousSlide, currentSlide) {
-
-          // dispatch for htmlwidgets
-          const event = window.document.createEvent("Event");
-          event.initEvent("slideenter", true, true);
-          window.document.dispatchEvent(event);
-
-          // dispatch for shiny
-          if (window.jQuery) {
-            if (previousSlide) {
-              window.jQuery(previousSlide).trigger("hidden");
-            }
-            if (currentSlide) {
-              window.jQuery(currentSlide).trigger("shown");
-            }
-          }
-        }
-
-        // hookup for reveal
-        if (window.Reveal) {
-          window.Reveal.addEventListener("slidechanged", function(event) {
-            fireSlideChanged(event.previousSlide, event.currentSlide);
-          });
-        }
-
-        // hookup for slidy
-        if (window.w3c_slidy) {
-          window.w3c_slidy.add_observer(function (slide_num) {
-            // slide_num starts at position 1
-            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-          });
-        }
-
-      })();
-    </script>
-
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {
