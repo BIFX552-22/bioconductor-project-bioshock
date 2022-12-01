@@ -1,0 +1,42 @@
+---
+title: "Bioconductor Methylation Workflow"
+author:
+- J. Jedediah Smith
+- Gerard Duncan
+- Ian Lacy
+format: revealjs
+editor: visual
+---
+
+## Introduction
+
+-   Epigenetics: The study of how your behaviors and environment can change the way your genes work.
+
+-   Methylation: Methyl group gets added to DNA, at C/G bases. Associated with development and disease.
+
+-   Common Methylation Research
+
+    -  Machine learning algorithm to classify tumors.
+
+    -  Physical activity and epigenetic markers.
+
+-   Methylation Level Measurements
+
+    -   Two measurements for each CpG: methylated intensity(M) and unmethylated intensity(U) for determining methylation proportions 
+
+    -   `GetBeta` function in `minfi` to get these values 
+
+## Bullets
+
+When you click the **Render** button a document will be generated that includes:
+
+-   Content authored with markdown
+-   Output from executable code
+
+## Code
+
+When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
