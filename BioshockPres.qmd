@@ -20,32 +20,115 @@ editor: visual
 
     -   Physical activity and epigenetic markers.
 
-## 1.2 Introduction
+## 1.2 Workflow Introduction
 
--   Methylation Level Measurements
+-  We used the Bioconductor Methylation Array Analysis workflow by Jovana Maksimovic. All examples and code are attributed to them.
 
-    -   Two measurements for each CpG: methylated intensity(M) and unmethylated intensity(U) for determining methylation proportions 
+-  CpG dinucleotides are DNA sites where a C nucleotide is followed by a G one. This is where methylation occurs.
+
+-  Two CpG measurements determine methylation proportions: methylated intensity (M) and unmethylated intensity (U).
 
     -   `GetBeta` function in `minfi` to get these values 
 
-## Bullets
+## 2.1 Obtaining the Data
 
-When you click the **Render** button a document will be generated that includes:
+-  Example data used here is bundled with the package and easy to access. You do not need to install anything extra.
 
--   Content authored with markdown
--   Output from executable code
+-  Alternatively, the data can be acquired with `figshare`.
+
+## 2.2 Load the Data
+
+-  There are many methlation specific packages used in this workflow, including `minifi`, `minfiData`, and `dmrcate`.
+
+-  Annotation and experiment data is loaded in with the `read.metharry.sheet` function.
+
+## 2.3 Quality Control
+
+-  Helps to ensure all data is high quality.
+
+-  Calculate detection p-value with the `detP` function.
+
+-  Plot the mean using bar graphs.
+
+-  Generate a report using the `QcReport` function from `minfi`.
+
+## Figure 2.3
+
+![Quality control bar graph of data.](./BioshockDoc_files/figure-html/unnamed-chunk-9-1.png)
+
+## 2.4 Normalization
+
+-  Helps deal with variability between samples.
+
+-  Many different methods even within just `minfi` package.
+
+-  The `preprocessFunnorm` function can be used to detect global methylation differences.
+
+-  The `preprocessQuantile` function is more suited to samples with no global differences.
+
+-  Visualize the before and after data with density plots.
+
+## Figure 2.4
+
+![Density plots comparing raw and normalized data.](./BioshockDoc_files/figure-html/unnamed-chunk-16-1.png)
+
+## 2.5 Data Exploration
+
+-  Visualization of methlation data is often done with multi-dimensional scaling plots (MDS). They look at the similarities and differences between the various samples.
+    
+    -   MDS is based on principal components analysis (PCA), a data reduction method that makes it easier to interpret large datasets.
+    
+-  The workflow utilizes the `plotMDS` function to plot data.
+
+## Figure 2.5a
+
+![MDS plots to visualize relationships between samples.](./BioshockDoc_files/figure-html/unnamed-chunk-17-1.png)
+
+## Figure 2.5b
+
+![MDS plots to expose sources of variation in data.](./BioshockDoc_files/figure-html/unnamed-chunk-18-1.png)
+
+## 2.6 Filtering
+
+-  Filter out DNA probes that interfere with analysis.
+
+-  Begin by ordering the probes, then removing any probes that have failed in one or more samples.
+
+-  While this dataset is entirely composed of male donors, it is possible to filter both X and Y chromosomes.
+
+-  Single nucleotide polymorphisms (SNPs) can also be filtered out of probes using `minifi` functions.
+
+-  After filtering, re-examine the data using MDS plots to see if the relationship between samples changed.
+
+-  Also calculate and plot the M and Beta values.
+
+## Figure 2.6a
+![MDS plots of filtered data.](./BioshockDoc_files/figure-html/unnamed-chunk-24-1.png)
+
+## Figure 2.6b
+![Beta Value and M-Value density plots.](./BioshockDoc_files/figure-html/unnamed-chunk-26-1.png)
+
+## 2.7 Probe-Wise Differential Methylation Analysis
+
+-  The focus of this dataset is discovering differentially methylated probes between four different cell types.
+
+-  In this workflow, we analyzed the M-values in limma. This allowed us to obtain moderated t-statistics and associated p-values for each CpG site.
+
+-  Based on a false discovery rate of 5%, we found 3000 significantly differentially methylated CpGs in the naïve vs rTreg comparison. The rTreg/ act_rTreg did not show any significant differential methylation.
+
+## Figure 2.7
+![Table of probe-wise analysis data.](./tableforian.png)
 
 ## 2.8 DMR Analysis
 
--   Probe-wise differential methylation analysis is useful but does not look at entire regions.
+-   Probe-wise differential methylation analysis is useful but not sufficent to analyze an entire region.
 -   The `dmrcate` package helps us identify and explore differential methylated regions (DMRs).
     -   Other functions like `dmrFind` and `bumphunter` are similar but use statistical methods and run slower.
 -   Generated figure maps methlated regions against the chromosome length and known genes.
     -   Need annotated chromosome data.
 
-## 2.8 DMR Analysis Figure
-
-![Figure made with the `dmrcate` package.](./BioshockDoc_files/figure-html/unnamed-chunk-34-1.png)
+## Figure 2.8
+![The `dmrcate` figure identifying our DMR against CpG prodes, gene loction, and chromosome.](./BioshockDoc_files/figure-html/unnamed-chunk-34-1.png)
 
 ## 2.9 Customizing Visualizations
 
@@ -56,9 +139,8 @@ When you click the **Render** button a document will be generated that includes:
     -   Need annotated chromosome data.
 -   Allows for clearer presentation of results.
 
-## 2.9 Customized DMR Figure
-
-![Figure made with the `Gviz` package.](./BioshockDoc_files/figure-html/unnamed-chunk-44-1.png)
+## Figure 2.9
+![The `Gviz` figure giving us a close-up of our DMR and CpGs.](./BioshockDoc_files/figure-html/unnamed-chunk-44-1.png)
 
 ## 3.1 Conclusions
 

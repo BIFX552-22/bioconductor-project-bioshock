@@ -344,28 +344,111 @@
 </ul></li>
 </ul>
 </section>
-<section id="introduction" class="slide level2">
-<h2>1.2 Introduction</h2>
+<section id="workflow-introduction" class="slide level2">
+<h2>1.2 Workflow Introduction</h2>
 <ul>
-<li><p>Methylation Level Measurements</p>
+<li><p>We used the Bioconductor Methylation Array Analysis workflow by Jovana Maksimovic. All examples and code are attributed to them.</p></li>
+<li><p>CpG dinucleotides are DNA sites where a C nucleotide is followed by a G one. This is where methylation occurs.</p></li>
+<li><p>Two CpG measurements determine methylation proportions: methylated intensity (M) and unmethylated intensity (U).</p>
 <ul>
-<li><p>Two measurements for each CpG: methylated intensity(M) and unmethylated intensity(U) for determining methylation proportions&nbsp;</p></li>
-<li><p><code>GetBeta</code> function in <code>minfi</code> to get these values&nbsp;</p></li>
+<li><code>GetBeta</code> function in <code>minfi</code> to get these values&nbsp;</li>
 </ul></li>
 </ul>
 </section>
-<section id="bullets" class="slide level2">
-<h2>Bullets</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes:</p>
+<section id="obtaining-the-data" class="slide level2">
+<h2>2.1 Obtaining the Data</h2>
 <ul>
-<li>Content authored with markdown</li>
-<li>Output from executable code</li>
+<li><p>Example data used here is bundled with the package and easy to access. You do not need to install anything extra.</p></li>
+<li><p>Alternatively, the data can be acquired with <code>figshare</code>.</p></li>
 </ul>
 </section>
+<section id="load-the-data" class="slide level2">
+<h2>2.2 Load the Data</h2>
+<ul>
+<li><p>There are many methlation specific packages used in this workflow, including <code>minifi</code>, <code>minfiData</code>, and <code>dmrcate</code>.</p></li>
+<li><p>Annotation and experiment data is loaded in with the <code>read.metharry.sheet</code> function.</p></li>
+</ul>
+</section>
+<section id="quality-control" class="slide level2">
+<h2>2.3 Quality Control</h2>
+<ul>
+<li><p>Helps to ensure all data is high quality.</p></li>
+<li><p>Calculate detection p-value with the <code>detP</code> function.</p></li>
+<li><p>Plot the mean using bar graphs.</p></li>
+<li><p>Generate a report using the <code>QcReport</code> function from <code>minfi</code>.</p></li>
+</ul>
+</section>
+<section id="figure-2.3" class="slide level2">
+<h2>Figure 2.3</h2>
+
+<img data-src="./BioshockDoc_files/figure-html/unnamed-chunk-9-1.png" class="r-stretch quarto-figure-center"><p class="caption">Quality control bar graph of data.</p></section>
+<section id="normalization" class="slide level2">
+<h2>2.4 Normalization</h2>
+<ul>
+<li><p>Helps deal with variability between samples.</p></li>
+<li><p>Many different methods even within just <code>minfi</code> package.</p></li>
+<li><p>The <code>preprocessFunnorm</code> function can be used to detect global methylation differences.</p></li>
+<li><p>The <code>preprocessQuantile</code> function is more suited to samples with no global differences.</p></li>
+<li><p>Visualize the before and after data with density plots.</p></li>
+</ul>
+</section>
+<section id="figure-2.4" class="slide level2">
+<h2>Figure 2.4</h2>
+
+<img data-src="./BioshockDoc_files/figure-html/unnamed-chunk-16-1.png" class="r-stretch quarto-figure-center"><p class="caption">Density plots comparing raw and normalized data.</p></section>
+<section id="data-exploration" class="slide level2">
+<h2>2.5 Data Exploration</h2>
+<ul>
+<li><p>Visualization of methlation data is often done with multi-dimensional scaling plots (MDS). They look at the similarities and differences between the various samples.</p>
+<ul>
+<li>MDS is based on principal components analysis (PCA), a data reduction method that makes it easier to interpret large datasets.</li>
+</ul></li>
+<li><p>The workflow utilizes the <code>plotMDS</code> function to plot data.</p></li>
+</ul>
+</section>
+<section id="figure-2.5a" class="slide level2">
+<h2>Figure 2.5a</h2>
+
+<img data-src="./BioshockDoc_files/figure-html/unnamed-chunk-17-1.png" class="r-stretch quarto-figure-center"><p class="caption">MDS plots to visualize relationships between samples.</p></section>
+<section id="figure-2.5b" class="slide level2">
+<h2>Figure 2.5b</h2>
+
+<img data-src="./BioshockDoc_files/figure-html/unnamed-chunk-18-1.png" class="r-stretch quarto-figure-center"><p class="caption">MDS plots to expose sources of variation in data.</p></section>
+<section id="filtering" class="slide level2">
+<h2>2.6 Filtering</h2>
+<ul>
+<li><p>Filter out DNA probes that interfere with analysis.</p></li>
+<li><p>Begin by ordering the probes, then removing any probes that have failed in one or more samples.</p></li>
+<li><p>While this dataset is entirely composed of male donors, it is possible to filter both X and Y chromosomes.</p></li>
+<li><p>Single nucleotide polymorphisms (SNPs) can also be filtered out of probes using <code>minifi</code> functions.</p></li>
+<li><p>After filtering, re-examine the data using MDS plots to see if the relationship between samples changed.</p></li>
+<li><p>Also calculate and plot the M and Beta values.</p></li>
+</ul>
+</section>
+<section id="figure-2.6a" class="slide level2">
+<h2>Figure 2.6a</h2>
+
+<img data-src="./BioshockDoc_files/figure-html/unnamed-chunk-24-1.png" class="r-stretch quarto-figure-center"><p class="caption">MDS plots of filtered data.</p></section>
+<section id="figure-2.6b" class="slide level2">
+<h2>Figure 2.6b</h2>
+
+<img data-src="./BioshockDoc_files/figure-html/unnamed-chunk-26-1.png" class="r-stretch quarto-figure-center"><p class="caption">Beta Value and M-Value density plots.</p></section>
+<section id="probe-wise-differential-methylation-analysis" class="slide level2">
+<h2>2.7 Probe-Wise Differential Methylation Analysis</h2>
+<ul>
+<li><p>The focus of this dataset is discovering differentially methylated probes between four different cell types.</p></li>
+<li><p>In this workflow, we analyzed the M-values in limma. This allowed us to obtain moderated t-statistics and associated p-values for each CpG site.</p></li>
+<li><p>Based on a false discovery rate of 5%, we found 3000 significantly differentially methylated CpGs in the naïve vs rTreg comparison. The rTreg/ act_rTreg did not show any significant differential methylation.</p></li>
+</ul>
+</section>
+<section id="figure-2.7" class="slide level2">
+<h2>Figure 2.7</h2>
+
+<img data-src="./tableforian.png" class="r-stretch quarto-figure-center"><p class="caption">Table of probe-wise analysis data.</p></section>
 <section id="dmr-analysis" class="slide level2">
 <h2>2.8 DMR Analysis</h2>
 <ul>
-<li>Probe-wise differential methylation analysis is useful but does not look at entire regions.</li>
+<li>Probe-wise differential methylation analysis is useful but not sufficent to analyze an entire region.</li>
 <li>The <code>dmrcate</code> package helps us identify and explore differential methylated regions (DMRs).
 <ul>
 <li>Other functions like <code>dmrFind</code> and <code>bumphunter</code> are similar but use statistical methods and run slower.</li>
@@ -376,10 +459,10 @@
 </ul></li>
 </ul>
 </section>
-<section id="dmr-analysis-figure" class="slide level2">
-<h2>2.8 DMR Analysis Figure</h2>
+<section id="figure-2.8" class="slide level2">
+<h2>Figure 2.8</h2>
 
-<img data-src="./BioshockDoc_files/figure-html/unnamed-chunk-34-1.png" class="r-stretch quarto-figure-center"><p class="caption">Figure made with the <code>dmrcate</code> package.</p></section>
+<img data-src="./BioshockDoc_files/figure-html/unnamed-chunk-34-1.png" class="r-stretch quarto-figure-center"><p class="caption">The <code>dmrcate</code> figure identifying our DMR against gene and chromosome data.</p></section>
 <section id="customizing-visualizations" class="slide level2">
 <h2>2.9 Customizing Visualizations</h2>
 <ul>
@@ -395,10 +478,10 @@
 <li>Allows for clearer presentation of results.</li>
 </ul>
 </section>
-<section id="customized-dmr-figure" class="slide level2">
-<h2>2.9 Customized DMR Figure</h2>
+<section id="figure-2.9" class="slide level2">
+<h2>Figure 2.9</h2>
 
-<img data-src="./BioshockDoc_files/figure-html/unnamed-chunk-44-1.png" class="r-stretch quarto-figure-center"><p class="caption">Figure made with the <code>Gviz</code> package.</p></section>
+<img data-src="./BioshockDoc_files/figure-html/unnamed-chunk-44-1.png" class="r-stretch quarto-figure-center"><p class="caption">The <code>Gviz</code> figure giving us a close-up of our DMR.</p></section>
 <section id="conclusions" class="slide level2">
 <h2>3.1 Conclusions</h2>
 <p><strong>Things Learned</strong></p>
